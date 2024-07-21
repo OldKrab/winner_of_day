@@ -3,7 +3,7 @@ import sys
 from time import sleep
 from typing import Any, Dict
 
-from winner_of_day.bot.data import Winner
+from winner_of_day.bot.data import ChatData, Winner
 
 class MigrateUnpickeler(pickle.Unpickler):
     def find_class(self, module_name: str, global_name: str) -> Any:
@@ -34,6 +34,15 @@ storage = load_storage(storage_path)
 
 
 for chat_data in storage["chat_data"].values():
+    chat_data: ChatData
+    chat_data.winner_of_day = chat_data.pidor_of_day
+    del chat_data.pidor_of_day
+    if(hasattr(chat_data, "pidor_msg")):
+        chat_data.winner_msg = chat_data.pidor_msg
+        del chat_data.pidor_msg
+    else:
+        chat_data.winner_msg = ""
+    chat_data.winner_title = ""
     for winner in chat_data.registered_users.values():
         winner: Winner
         winner.titles = {}
