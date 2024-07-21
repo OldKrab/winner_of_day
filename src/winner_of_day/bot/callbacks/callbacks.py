@@ -161,7 +161,7 @@ async def person_of_day_cmd(update: Update, ctx: PyDoorContext) -> None:
         if chat_data.winner_of_day == -1:
             return
         cur_winner = (await chat.get_member(chat_data.winner_of_day)).user
-        await chat.send_message(remind_winner_of_day(cur_winner))
+        await chat.send_message(remind_winner_of_day(cur_winner, chat_data.winner_title))
         return
     chat_data.last_day = cur_day
     chat_data.winner_of_day = -1

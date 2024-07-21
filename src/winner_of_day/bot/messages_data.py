@@ -74,8 +74,8 @@ def get_caption_for_winner_video(title: str) -> str:
 REMIND_TO_RUN_MSG = "Кажется, сегодня вы не узнали, кто победитель дня. Исправьте эту оплошность!"
 
 
-def remind_winner_of_day(user: User):
-    return f"Напоминаю, сегодня победитель 🌈 дня - {user.full_name} ({user.name})!"
+def remind_winner_of_day(user: User, title: str):
+    return f"Напоминаю, сегодня победитель 🌈 дня - {user.full_name} ({user.name})! И его титул - {title}"
 
 
 def winner_send_msg(user: User):
