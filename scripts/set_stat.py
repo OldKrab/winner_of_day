@@ -32,7 +32,6 @@ new_storage_path = sys.argv[2]
 
 storage = load_storage(storage_path)
 
-print(storage)
 
 for chat_data in storage["chat_data"].values():
     for winner in chat_data.registered_users.values():
