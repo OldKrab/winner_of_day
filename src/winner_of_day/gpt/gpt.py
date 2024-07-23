@@ -26,7 +26,11 @@ class GPT:
         return res
     
     async def generate_title_of_day(self, winner: str, winner_msg: str) -> str:
-        return await self.api.send_prompt(SYSTEM_TITLE_PROMPT, get_title_prompt(winner, winner_msg), 100)
+        res = await self.api.send_prompt(SYSTEM_TITLE_PROMPT, get_title_prompt(winner, winner_msg), 100)
+        while len(res.split()) > 3:
+            logger.warning(f"Api {self.api} return: {res}")
+            res= await self.api.send_prompt(SYSTEM_TITLE_PROMPT, get_title_prompt(winner, winner_msg), 100)
+        return res
 
     
     async def _generate_song(self, winner: str, genre: str, winner_msg: str, title: str, api: GPTApiProtocol) -> str:
