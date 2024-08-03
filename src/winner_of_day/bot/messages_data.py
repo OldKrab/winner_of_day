@@ -159,15 +159,19 @@ def get_title_prompt(winner: str, winner_msg: str):
 def get_song_text_premessage():
     return random.choice(
         [
-            "Поздравительная песня для поздравимого!"
-            "Послушай, что я сочинил:"
-            "Ради такого случая, для победителя особый подарок: песня!"
-            "Только сегодня! Только сейчас! Песня!"
+            "Поздравительная песня для поздравимого!",
+            "Послушай, что я сочинил:",
+            "Ради такого случая, для победителя особый подарок: песня!",
+            "Только сегодня! Только сейчас! Песня!",
         ]
     )
 
 def get_song_text_message(song_text: str)-> str:
-    song_text = re.sub(r'[_*[\]()~>#\+\-=|{}.!]', lambda x: '\\' + x.group(), song_text)
+    def escape(text: str):
+        return re.sub(r'[_*[\]()~>#\+\-=|{}.!]', lambda x: '\\' + x.group(), text)
+    
+    song_text = escape(song_text)
     song_text = "\n".join(">"+line for line in song_text.splitlines())
     song_text += "||"
-    return get_song_text_premessage() + "\n" + song_text
+    song_text = escape(get_song_text_premessage()) + "\n" + song_text
+    return song_text
