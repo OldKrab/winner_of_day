@@ -17,9 +17,9 @@ from winner_of_day.bot.messages_data import (
     SELECTING_PRE_MESSAGES,
     REGISTER_MSG,
     REMIND_TO_RUN_MSG,
-    SONGS_GENRES,
     UNREGISTER_MSG,
     get_caption_for_winner_video,
+    get_random_song_genre,
     get_song_text_message,
     get_titles_stat,
     get_winner_message,
@@ -136,7 +136,7 @@ async def generate_and_send_song(
                 await asyncio.sleep(1)
 
 
-    genre = random.choice(SONGS_GENRES)
+    genre = get_random_song_genre()
     song_text = await ctx.bot_data.gpt.generate_song(winner_user.full_name, genre, winner_msg, title)
     await chat.send_message(get_song_text_message(song_text), parse_mode="MarkdownV2") 
     

@@ -33,39 +33,178 @@ SELECTING_PRE_MESSAGES = [
 DEFAULT_WINNER_MSG = ""
 
 SONGS_GENRES = [
+    "alternative",
+    "ambient",
+    "art rock",
+    "avant-garde",
+    "bachata",
+    "baroque",
+    "black metal",
+    "bluegrass",
+    "blues",
+    "bossa nova",
+    "cajun",
+    "chillout",
+    "chillwave",
+    "christian rap",
+    "christian rock",
+    "classical",
+    "contemporary classical",
+    "country",
+    "crust punk",
+    "cumbia",
+    "dark wave",
+    "death metal",
+    "disco",
+    "doom metal",
+    "downtempo",
+    "dream pop",
+    "drum and bass",
+    "dubstep",
+    "electro swing",
+    "electronic",
+    "emo",
+    "emo rap",
+    "ethereal wave",
+    "experimental",
+    "flamenco",
+    "folk",
+    "funk",
+    "future bass",
+    "gospel",
+    "goth",
+    "gothic metal",
+    "gregorian chant",
+    "grindcore",
+    "grunge",
+    "hard rock",
+    "hip hop",
+    "horrorcore",
+    "house",
+    "indie",
+    "industrial",
+    "j-pop",
+    "jazz",
+    "jewish song",
+    "k-pop",
+    "latin pop",
+    "lo-fi",
+    "math rock",
+    "medieval",
+    "merengue",
+    "metal",
+    "metalcore",
+    "minimalism",
+    "new wave",
+    "noise",
+    "nu metal",
     "opera",
-    "heavy metal",
+    "orchestral",
+    "pop",
+    "post-hardcore",
+    "post-punk",
+    "post-rock",
+    "power metal",
+    "progressive rock",
+    "psychedelic rock",
+    "punk",
+    "r&b",
+    "reggae",
+    "reggaeton",
+    "renaissance",
+    "retrowave",
+    "rock",
+    "romantic",
+    "russian folk",
+    "salsa",
+    "samba",
+    "screamo",
+    "shoegaze",
+    "ska",
+    "soft rock",
+    "soul",
+    "symphonic metal",
+    "synthpop",
+    "synthwave",
+    "tango",
+    "techno",
+    "thrash metal",
+    "trance",
+    "trap",
+    "trip-hop",
+    "vaporwave",
+    "world music",
+    "zydeco",
+    "aggressive",
+    "ambient",
     "anime opening",
+    "anthemic",
+    "atmospheric",
+    "ballad",
+    "bass",
+    "beat",
+    "blues",
+    "bounce drop",
+    "cantonese",
+    "chill",
+    "church choir",
+    "classical",
+    "country",
+    "dance",
+    "dancehall",
+    "deep",
+    "disco",
+    "drum and bass",
+    "dubstep",
+    "electro",
+    "electronic",
+    "electropop",
+    "emo",
+    "emotional",
+    "epic",
+    "female voice",
+    "folk",
+    "funk",
+    "gospel",
+    "guitar",
+    "heavy metal",
+    "hip-hop",
+    "house",
+    "indie",
+    "indie pop",
+    "intense",
+    "j-pop",
+    "jazz",
+    "lo-fi",
+    "male voice",
+    "math rock",
+    "metal",
+    "opera",
+    "orchestral",
+    "piano",
+    "pop",
+    "powerful",
+    "progressive",
+    "psychedelic",
+    "punk",
+    "r&b",
+    "rap",
+    "reggae",
     "rock",
     "rock opera",
-    "ballad",
-    "pop",
-    "jazz",
-    "electronic",
-    "hip-hop",
-    "country",
-    "Russian folk",
-    "Jewish song",
-    "reggae",
-    "folk",
-    "blues",
-    "classical",
-    "funk",
-    "punk",
-    "ambient",
-    "indie",
-    "disco",
     "ska",
-    "rap",
+    "synth",
+    "synthwave",
     "techno",
-    "dancehall",
-    "r&b",
-    "gospel",
-    "dubstep",
+    "trance",
     "trap",
-    "church choir",
+    "upbeat",
+    "vocaloid",
 ]
 
+def get_random_song_genre() -> str:
+    subgenres = [random.choice(SONGS_GENRES) for _ in range(3)]
+    return ", ".join(subgenres)
 
 def get_caption_for_winner_video(title: str) -> str:
     return f"Наш любимый {title}! Тебе вручается поздравительное видео:"
@@ -117,7 +256,11 @@ def get_win_stat(winner_stat: dict[User, int]):
 def get_titles_stat(winner_stat: dict[User, dict[str, int]]):
 
     def to_titles_str(titles: dict[str, int]) -> str:
-        return "\n".join("    - " + title + (f" (x{cnt})" if cnt > 1 else "") for title, cnt in titles.items() if cnt > 0)
+        return "\n".join(
+            "    - " + title + (f" (x{cnt})" if cnt > 1 else "")
+            for title, cnt in titles.items()
+            if cnt > 0
+        )
 
     winner_stat_list = list(winner_stat.items())
     winners = "\n".join(
@@ -147,13 +290,13 @@ def get_title_prompt(winner: str, winner_msg: str):
     if winner_msg == DEFAULT_WINNER_MSG:
         winner_msg_prompt = ""
     else:
-        winner_msg_prompt = f'Ранее он однажды написал сообщение "{winner_msg}", можешь учесть это в титуле.'
+        winner_msg_prompt = (
+            f'Ранее он однажды написал сообщение "{winner_msg}", можешь учесть это в титуле.'
+        )
     return f"""
 Сгенерируй титул дня для пользователя чата. Это должен быть смешной и ироничный титул. Вот примеры таких титулов: Красавчик дня, Чудо дня, Сызрань, Cупер кекс, Населяющая сексмашина, Москвин дня. Разрешено писать нецензурные выражения. Придумай оригинальной и смешной титул. 
 В ответ присылай только титул дня, без лишних слов! Титул состоит из одного или двух слов. В титуле не должно упоминаться имя или фамилия пользователя. В ответе не должно быть кавычек. 
 Сегодня титул дня получает пользователь с ником {winner}. {winner_msg_prompt}"""
-
-
 
 
 def get_song_text_premessage():
@@ -166,12 +309,13 @@ def get_song_text_premessage():
         ]
     )
 
-def get_song_text_message(song_text: str)-> str:
+
+def get_song_text_message(song_text: str) -> str:
     def escape(text: str):
-        return re.sub(r'[_*[\]()~>#\+\-=|{}.!]', lambda x: '\\' + x.group(), text)
-    
+        return re.sub(r"[_*[\]()~>#\+\-=|{}.!]", lambda x: "\\" + x.group(), text)
+
     song_text = escape(song_text)
-    song_text = "\n".join(">"+line for line in song_text.splitlines())
+    song_text = "\n".join(">" + line for line in song_text.splitlines())
     song_text += "||"
     song_text = escape(get_song_text_premessage()) + "\n" + song_text
     return song_text

@@ -3,7 +3,6 @@ import random
 from typing import AsyncIterator, Iterable
 from telegram import User
 from winner_of_day.bot.data import PyDoorContext
-from winner_of_day.bot.messages_data import SONGS_GENRES
 from winner_of_day.logger import get_logger
 from winner_of_day.suno.api import SongInfo
 
