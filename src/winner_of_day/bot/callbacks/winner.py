@@ -15,11 +15,9 @@ async def generate_title(winner: User, winner_msg: str, ctx: PyDoorContext) -> s
     return title
 
 
-async def generate_songs(
-    winner: User, today: date, winner_msg: str, title: str, ctx: PyDoorContext
+async def generate_suno_songs(
+    song_text: str, genre: str, winner: User, today: date, winner_msg: str, title: str, ctx: PyDoorContext
 ) -> AsyncIterator[SongInfo]:
-    genre = random.choice(SONGS_GENRES)
-    song_text = await ctx.bot_data.gpt.generate_song(winner.full_name, genre, winner_msg, title)
     songs_infos = ctx.bot_data.suno.custom_generate(song_text, genre, f"{winner.full_name}_{today}")
     logger.info(
         f"Generated songs for genre '{genre}' and winner '{winner.full_name}' and msg '{winner_msg}' and title {title} with ids: {', '.join(s.id for s in songs_infos)}"

@@ -4,7 +4,7 @@ import random
 from urllib.error import HTTPError
 import urllib.request
 
-from winner_of_day.bot.callbacks.winner import generate_songs, generate_title
+from winner_of_day.bot.callbacks.winner import generate_suno_songs, generate_title
 from winner_of_day.bot.data import Winner, PyDoorContext
 from telegram import Chat, Message, Update, User
 from winner_of_day.bot.utils import get_chat
@@ -17,8 +17,10 @@ from winner_of_day.bot.messages_data import (
     SELECTING_PRE_MESSAGES,
     REGISTER_MSG,
     REMIND_TO_RUN_MSG,
+    SONGS_GENRES,
     UNREGISTER_MSG,
     get_caption_for_winner_video,
+    get_song_text_message,
     get_titles_stat,
     get_winner_message,
     NO_ONE_REGISTERED_MSG,
@@ -133,7 +135,12 @@ async def generate_and_send_song(
                 logger.error(f"got error, try again: {e}")
                 await asyncio.sleep(1)
 
-    songs = await generate_songs(winner_user, cur_day, winner_msg, title, ctx)
+
+    genre = random.choice(SONGS_GENRES)
+    song_text = await ctx.bot_data.gpt.generate_song(winner_user.full_name, genre, winner_msg, title)
+    await chat.send_message(get_song_text_message(song_text), parse_mode="MarkdownV2") 
+    
+    songs = await generate_suno_songs(song_text, genre, winner_user, cur_day, winner_msg, title, ctx)
     async for song in songs:
         logger.info(f"loading file from url '{song.video_url}'")
         await load_video(song.video_url, "temp.mp4")
