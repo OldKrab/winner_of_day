@@ -14,6 +14,7 @@ from winner_of_day.bot.messages_data import (
     ALREADY_REGISTER_MSG,
     ALREADY_UNREGISTER_MSG,
     DEFAULT_WINNER_MSG,
+    MESSAGE_CONTEXT_SIZE,
     SELECTING_PRE_MESSAGES,
     REGISTER_MSG,
     REMIND_TO_RUN_MSG,
@@ -37,7 +38,7 @@ logger = get_logger(__name__)
 async def save_message(update: Update, ctx: PyDoorContext) -> None:
     msg = update.effective_message
     user = update.effective_user
-    if msg is None or user is None:
+    if msg is None or msg.text is None or msg.text.isspace() or user is None:
         return
     if msg.text is not None and msg.text.startswith("/"):
         return
@@ -45,7 +46,10 @@ async def save_message(update: Update, ctx: PyDoorContext) -> None:
     if user.id not in chat_data.registered_users:
         return
 
-    chat_data.registered_users[user.id].messages_ids.append(msg.id)
+    msg_ids = chat_data.registered_users[user.id].messages_ids
+    while len(msg_ids) > MESSAGE_CONTEXT_SIZE:
+        msg_ids.pop(0)
+    msg_ids.append(msg.id)
 
 
 async def register_cmd(update: Update, ctx: PyDoorContext) -> None:

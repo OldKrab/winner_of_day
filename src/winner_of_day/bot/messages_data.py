@@ -2,6 +2,7 @@ import random
 import re
 from telegram import User
 
+MESSAGE_CONTEXT_SIZE = 100
 
 NO_ONE_REGISTERED_MSG = "Никто не зарегистрировался..."
 
