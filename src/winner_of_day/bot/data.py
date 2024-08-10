@@ -25,6 +25,7 @@ class Command:
 def get_command(name: str, callback: CallbackType, desc: str) -> Command:
     return Command(name, CommandHandler(name, callback), desc)
 
+
 @dataclass
 class Winner:
     stat: int
@@ -50,22 +51,21 @@ class ChatData:
         self.winner_msg: str = DEFAULT_WINNER_MSG
         self.last_day: date = date.min
 
-    def get_random_registered_user_id(self)-> int:
-        return random.choice(list(self.registered_users.keys()))
+    def get_random_registered_user_id(self) -> int:
+        stats = [user.stat for user in self.registered_users.values()]
+        max_weight = max(stats) * 1.5
+        weights = [max_weight - stat for stat in stats]
+        return random.choices(list(self.registered_users.keys()), weights=weights, k=1)[0]
 
     def __repr__(self) -> str:
         return self.__dict__.__str__()
+
 
 class BotData:
     def __init__(self):
         pass
 
-    def init(
-        self,
-        admin: int,
-        gpt_api_key: str,
-        suno_endpoint: str
-    ):
+    def init(self, admin: int, gpt_api_key: str, suno_endpoint: str):
         self.admin = admin
         self.enabled = True
         self.gpt = GPT(OpenAIApi(gpt_api_key, model="gpt-4o"), ClaudeApi(gpt_api_key))
