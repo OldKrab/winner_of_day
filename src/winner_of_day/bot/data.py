@@ -53,8 +53,8 @@ class ChatData:
 
     def get_random_registered_user_id(self) -> int:
         stats = [user.stat for user in self.registered_users.values()]
-        max_weight = max(stats) * 1.5
-        weights = [max_weight - stat for stat in stats]
+        max_weight = max(stats) * 1.1
+        weights = [max_weight - stat + 0.1 for stat in stats]
         return random.choices(list(self.registered_users.keys()), weights=weights, k=1)[0]
 
     def __repr__(self) -> str:
